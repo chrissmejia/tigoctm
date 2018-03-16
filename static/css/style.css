@@ -325,6 +325,18 @@ a.btn-secondary {
     font-weight: 500;
 }
 
+.section-body {
+    padding: 2rem 0;
+    background: #efefef;
+}
+
+.section-body .title {
+    border-bottom: #b9c9dc solid 1px;
+    font-weight: 500;
+    margin-bottom: 1.8rem;
+    padding-bottom: 1.4rem;
+}
+
 #section-next {
     background: #f3f3f2;
     color: #7b7b7b;
