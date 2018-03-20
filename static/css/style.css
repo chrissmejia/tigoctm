@@ -652,7 +652,158 @@ a.btn-secondary {
 }
 
 #identityPage #section-addresses {
-    padding: 5rem 0;
+    padding: 0 0 5rem 0;
+}
+
+#identityPage .qrcode img, #identityPage .qrcode canvas {
+    width: 100%
+}
+
+#addresess-tab {
+    width: 100%;
+}
+
+#identityPage .nav-tabs {
+    border-bottom: 0;
+    margin-bottom: 1rem;
+}
+
+#identityPage .nav-tabs .nav-link {
+    background: #92969f;
+    color: #d5d7df;
+    padding: 1rem 0;
+    border-radius: 0;
+}
+
+#identityPage .nav-tabs .nav-link.active {
+    color: #495057;
+    background-color: #fff;
+}
+
+#identityPage .nav-tabs .nav-item {
+    width: 50%;
+    font-size: 1.2rem;
+    font-weight: 300;
+}
+
+#identityPage .card {
+    border-top: 5px solid #a9a9a9;    
+    padding: 1rem 1rem 0.5rem 1rem;
+    margin: 1rem;
+}
+
+#identityPage .card .commodity {
+    text-align: right;
+    font-size: 1.4rem;
+    color: #a9a9a9;
+}
+
+#identityPage .card .balance {
+    text-align: right;
+    font-size: 2rem;
+    color: #a9a9a9;
+}
+
+#identityPage .totalcard {
+    border: 0;
+    border-bottom: 5px solid #a9a9a9;
+    color: rgba(0, 0, 0, 0.7);
+    padding: 0.6rem;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+#identityPage .card.dash {
+    border-top: 5px solid #2482d2;
+}
+
+#identityPage .card.dash .commodity {
+    color: #2382d2;
+}
+
+#identityPage .card.dash .balance {
+    color: #2382d2;
+}
+
+#identityPage .totalcard.dash {
+    border-bottom: 5px solid #2482d2;
+}
+
+#identityPage .card.btc {
+    border-top: 5px solid #f68734;
+}
+
+#identityPage .card.btc .commodity {
+    color: #f68734;
+}
+
+#identityPage .card.btc .balance {
+    color: #f68734;
+}
+
+#identityPage .totalcard.btc {
+    border-bottom: 5px solid #f68734;
+}
+
+#identityPage .card.eth {
+    border-top: 5px solid #191919;
+}
+
+#identityPage .card.eth .commodity {
+    color: #191919;
+}
+
+#identityPage .card.eth .balance {
+    color: #191919;
+}
+
+#identityPage .totalcard.eth {
+    border-bottom: 5px solid #191919;
+}
+
+#identityPage .card.xcm {
+    border-top: 5px solid #b94433;
+}
+
+#identityPage .card.xcm .commodity {
+    color: #b94433;
+}
+
+#identityPage .card.xcm .balance {
+    color: #b94433;
+}
+
+#identityPage .totalcard.xcm {
+    border-bottom: 5px solid #b94433;
+}
+
+#identityPage .card .address {
+    padding-top: 1rem;
+    color: #6b6b6b;
+}
+
+#identityPage .new.card .address {
+    margin-top: 6.64rem;
+}
+
+#identityPage .new.card.none .address {
+    margin-top: 0;
+}
+
+#identityPage .newadd {
+    font-size: 3rem;
+    color: #444444;
+}
+
+#identityPage .instructions {
+    padding: 2rem 0;
+    color: #444444;
+}
+
+#identityPage hr {
+    width: 100%;
 }
 
 @media (max-width: 768px) {

@@ -68,7 +68,7 @@ def getAssets(commodity, address):
         'bal'
     ])
     if (ledgerBals):
-        ledgerBals = ledgerBals.decode().split('\n')
+        ledgerBals = ledgerBals.decode("utf-8").split('\n')
     for line in ledgerBals:
         if re.search(' (Assets|Payable):{0,1}\w*$', line):
             return line.replace('Assets', '').replace(commodity, '').replace(' ', '').replace('Payable', '')
@@ -117,7 +117,7 @@ def getAddresses(username, side='deposit'):
     except subprocess.CalledProcessError as cpe:
         print(cpe)
     if (grep):
-        grep = grep.decode().split('\n')
+        grep = grep.decode("utf-8").split('\n')
     addys = {}
     for line in grep:
         if len(line) == 0:
@@ -201,9 +201,7 @@ def register(username, faddress):
 def genaddress(commodity, username):
     # Getting current addresess 
     addys = getAddresses(username)
-    print("addys")
-    print(addys)
-    # Check if user dont have any assigned yet of that commodity
+    # Check if user dont have more than 3 assigned yet of that commodity
     if commodity not in addys or len(addys[commodity]) < 3:
         # Find a free address
         imp = str(subprocess.check_output([
@@ -215,12 +213,19 @@ def genaddress(commodity, username):
             'included.dat'
         ])).split('included.dat')
 
+        print(imp)
+
         addysNumber = len(imp) - 1
+        print(addysNumber)
         if addysNumber > 0:
             # Choose a random address
-            chosen = random.randint(0, addysNumber)
-            imp[chosen] = imp[chosen].replace('\\n%sledger/%s' % (GULD_HOME, commodity), '')
+            chosen = random.randint(0, addysNumber - 1)
+            imp[chosen] = imp[chosen].encode().decode().replace('%sledger/%s' % (GULD_HOME, commodity), '')
+            imp[chosen] = imp[chosen].replace('\\n', '')
+            imp[chosen] = imp[chosen].replace('\'', '')
+            print(imp[chosen])
             found = re.search('[^/]\w*[^/]', imp[chosen]).group(0)
+            print(found)
             # Mark as taken
             f = open('%sledger/%s/%s/included.dat' % (GULD_HOME, commodity, found), 'w')
             f.write(';tigoctm:%s' % username)

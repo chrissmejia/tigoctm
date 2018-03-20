@@ -15,6 +15,8 @@
     crossorigin="anonymous">
 
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css')}}" />
+  <script type="application/javascript" src="{{ url_for('static', filename='js/qrcode.min.js')}}">
+  </script>
 </head>
 
 <body id="identityPage">
@@ -82,87 +84,208 @@
   </section>
 
 
+
   <section id="section-addresses" class="section-wrapper text-center">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="input-tab" data-toggle="tab" href="#input" role="tab" aria-controls="input" aria-selected="true">Input addresses</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="output-tab" data-toggle="tab" href="#output" role="tab" aria-controls="output" aria-selected="false">Output addresses</a>
+      </li>
+    </ul>
     <div class="container">
       <div class="row">
-        <div class="col-md-12">
-          <p>If you are {{ username }}, you can purchase XCM at the rates shown in the top by sending to one of your "Input"
-            addresses. Click for a QR code.</p>
+
+        <div class="tab-content" id="addresess-tab">
+          <div class="tab-pane fade show active" id="input" role="tabpanel" aria-labelledby="input-tab">
+            <div class="row">
+              <div class="col-md-12 text-center instructions">
+                You can purchase XCM for {{ username }} at the rates shown in the top by sending to one of your "Input" addresses. Click
+                for a QR code.
+              </div>
+            </div>
+
+            {% if ("BTC" not in depositAddresses) or ("DASH" not in depositAddresses) %}
+            <div class="row">
+              <hr> {% if "BTC" not in depositAddresses %}
+              <div class="col-md-6">
+                <a href="{{ url_for('genaddress', commodity='BTC', username=username) }}">
+                  <div class="card new none btc">
+                    <div class="row">
+                      <div class="col-md-5 text-left">
+                        <i class="newadd far fa-plus-square"></i>
+                      </div>
+                      <div class="col-md-7 bal">
+                        <div class="balance">
+                          New
+                        </div>
+                        <div class="commodity">
+                          BTC
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 address">
+                        Create new BTC address
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              {% endif %} {% if "DASH" not in depositAddresses %}
+              <div class="col-md-6">
+                <a href="{{ url_for('genaddress', commodity='DASH', username=username) }}">
+                  <div class="card new none dash">
+                    <div class="row">
+                      <div class="col-md-5 text-left">
+                        <i class="newadd far fa-plus-square"></i>
+                      </div>
+                      <div class="col-md-7 bal">
+                        <div class="balance">
+                          New
+                        </div>
+                        <div class="commodity">
+                          DASH
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 address">
+                        Create new DASH address
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              {% endif %}
+              <hr>
+            </div>
+            {% endif %} {% for commodity in depositAddresses %}
+            <div class="row">
+              {% for address in depositAddresses[commodity] %} {% if address != 'sub-total' %}
+              <div class="col-md-6">
+                <div class="card {{ commodity|lower }}">
+                  <div class="row">
+                    <div class="col-md-5">
+                      <div class="qrcode" id="qrcode-{{ address }}"></div>
+                      <script type="text/javascript">
+                        new QRCode(document.getElementById("qrcode-{{ address }}"), {
+                          text: "{{ address }}",
+                          colorDark: "#444444"
+                        });
+                      </script>
+                    </div>
+                    <div class="col-md-7 bal">
+                      <div class="balance">
+                        -{{ depositAddresses[commodity][address] }}
+                      </div>
+                      <div class="commodity">
+                        {{ commodity }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12 address">
+                      {{ address }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endif %} {% endfor %} {% if depositAddresses[commodity].__len__()
+              < 3 %} <div class="col-md-6">
+                <a href="{{ url_for('genaddress', commodity=commodity, username=username) }}">
+                  <div class="card new {{ commodity|lower }}">
+                    <div class="row">
+                      <div class="col-md-5 text-left">
+                        <i class="newadd far fa-plus-square"></i>
+                      </div>
+                      <div class="col-md-7 bal">
+                        <div class="balance">
+                          New
+                        </div>
+                        <div class="commodity">
+                          {{ commodity }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 address">
+                        Create new {{ commodity }} address
+                      </div>
+                    </div>
+                  </div>
+                </a>
+            </div>
+            {% endif %}
+
+            <div class="col-md-12">
+              <div class="totalcard {{ commodity|lower }}">
+                <div class="row">
+                  <div class="col-md-6 text-left total-title">
+                    {{ commodity }} sub-total
+                  </div>
+                  <div class="col-md-6 text-right total-balance">
+                    -{{ depositAddresses[commodity]['sub-total'] }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="tab-pane fade" id="output" role="tabpanel" aria-labelledby="output-tab">
+            {% for commodity in withdrawAddresses %}
+            <div class="row">
+              {% for address in withdrawAddresses[commodity] %} {% if address != 'sub-total' %}
+              <div class="col-md-6">
+                <div class="card {{ commodity|lower }}">
+                  <div class="row">
+                    <div class="col-md-5">
+                      <div class="qrcode" id="qrcode-{{ address }}"></div>
+                      <script type="text/javascript">
+                        new QRCode(document.getElementById("qrcode-{{ address }}"), {
+                          text: "{{ address }}",
+                          colorDark: "#444444"
+                        });
+                      </script>
+                    </div>
+                    <div class="col-md-7 bal">
+                      <div class="balance">
+                        -{{ withdrawAddresses[commodity][address] }}
+                      </div>
+                      <div class="commodity">
+                        {{ commodity }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12 address">
+                      {{ address }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endif %} {% endfor %} 
+
+            <div class="col-md-12">
+              <div class="totalcard {{ commodity|lower }}">
+                <div class="row">
+                  <div class="col-md-6 text-left total-title">
+                    {{ commodity }} sub-total
+                  </div>
+                  <div class="col-md-6 text-right total-balance">
+                    -{{ withdrawAddresses[commodity]['sub-total'] }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-6">
-          <div class="Information-info">
-            <h3 id="inputs">Inputs</h3>
-            <table>
-              {% if "BTC" not in depositAddresses %}
-              <a href="{{ url_for('genaddress', commodity='BTC', username=username) }}">
-                <button>Get Bitcoin Address</button>
-              </a>
-              {% endif %} 
-              {% if "DASH" not in depositAddresses %}
-              <a href="{{ url_for('genaddress', commodity='DASH', username=username) }}">
-                <button>Get Dash Address</button>
-              </a>
-              {% endif %} 
-              {% for commodity in depositAddresses %} {% for address in depositAddresses[commodity] %} {% if address != 'sub-total'
-              %}
-              <tr>
-                <td>
-                  <a href="{{ url_for('address', address=address) }}">{{ address }}</a>
-                </td>
-                <td>-{{ depositAddresses[commodity][address] }}</td>
-                <td>{{ commodity }}</td>
-              </tr>
-              {% endif %} {% endfor %}
-              <tr>
-                <td>
-                  <strong>{{ commodity }} sub-total</strong>
-                </td>
-                <td>
-                  <strong>-{{ depositAddresses[commodity]['sub-total'] }}</strong>
-                </td>
-                <td>
-                  <strong>{{ commodity }}</strong>
-                </td>
-              </tr>
-              {% endfor %}
-            </table>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="Information-info">
-            <h3 id="outputs">Outputs</h3>
-            <table>
-              {% for commodity in withdrawAddresses %} {% for address in withdrawAddresses[commodity] %} {% if address != 'sub-total' %}
-              <tr>
-                <td>{{ address }}</td>
-                <td>{{ withdrawAddresses[commodity][address] }}</td>
-                <td>{{ commodity }} {% if commodity == 'XCM' %}
-                  <span style="color: red;">*</span>
-                  {% endif %}
-                </td>
-              </tr>
-              {% endif %} {% endfor %}
-              <tr>
-                <td>
-                  <strong>{{ commodity }} sub-total</strong>
-                </td>
-                <td>
-                  <strong>{{ withdrawAddresses[commodity]['sub-total'] }}</strong>
-                </td>
-                <td>
-                  <strong>{{ commodity }}</strong>
-                </td>
-              </tr>
-              {% endfor %}
-            </table>
-            <p style="color: red;">
-              <strong>*No XCM Withdrawals will be released to Ethereum net before Jan. 1 2018. </strong>
-            </p>
-          </div>
-        </div>
-      </div>
+
+    </div>
     </div>
   </section>
 
@@ -230,6 +353,8 @@
     </div>
   </footer>
   <script src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+    crossorigin="anonymous"></script>
   <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
   <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
